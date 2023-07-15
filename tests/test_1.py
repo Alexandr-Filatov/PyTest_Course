@@ -1,13 +1,14 @@
 import requests
 from conftests import SERVICE_URL
-from src.enums.global_enums import GlobalErrorMessages
-from jsonschema import validate
+
+from src.baseclasses.response import Response
+from src.schems.post import POST_SCHEMA
 
 
 
 def test_getting_post(recieved_=None):
-    response = requests.get(url=SERVICE_URL)
-    recieved_posts = response.json()
+    r = requests.get(url=SERVICE_URL)
+    response = Response(r)
 
-    assert response.status_code == 200, GlobalErrorMessages.WRONG_STATUS_CODE.value
-    assert len(recieved_posts) == 3, GlobalErrorMessages.WRONG_ELEMENTS_COUNTS.value
+
+    response.assert_status_code(200).validate(POST_SCHEMA)
